@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Home - Smart Mini Library{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <h1>AI-powered digital learning—without the hassle.</h1>
+        <p>
+          Smart search, book recommendations, reading progress, and deterministic article summarization.
+        </p>
+
+        <form class="searchbar" action="{{ url_for('search') }}" method="get">
+          <input name="q" placeholder="Search books, authors, or topics..." required />
+          <button type="submit">Search</button>
+        </form>
+
+        <div class="chips">
+          <a class="chip" href="{{ url_for('recommendations', q='python programming') }}">Python</a>
+          <a class="chip" href="{{ url_for('recommendations', q='software design patterns') }}">Design Patterns</a>
+          <a class="chip" href="{{ url_for('recommendations', q='deep learning ai') }}">Deep Learning</a>
+          <a class="chip" href="{{ url_for('recommendations', q='habits productivity') }}">Habits</a>
+        </div>
+      </div>
+
+      <div class="card glass">
+        <h3>Top books</h3>
+        <div class="list">
+          {% for b in top_books %}
+            <a class="list-item" href="{{ url_for('book_details', book_id=b['id']) }}">
+              <div class="li-main">
+                <div class="li-title">{{ b['title'] }}</div>
+                <div class="li-sub">{{ b['author'] }}</div>
+              </div>
+              <div class="li-meta">★ {{ b['popularity'] }}</div>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% if not user %}
+  <section class="note">
+    <div class="card">
+      <strong>Demo login:</strong> <span class="mono">demo</span> / <span class="mono">demo123</span>
+    </div>
+  </section>
+  {% endif %}
+{% endblock %}
+

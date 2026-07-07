@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Summarize - Smart Mini Library{% endblock %}
+
+{% block content %}
+  <section>
+    <div class="page-head">
+      <h2>Article Summarization</h2>
+      <div class="muted">Deterministic extractive summarizer (no external API calls).</div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 1fr;">
+      <div class="card">
+        <form method="post" class="form">
+          <label>
+            Paste text
+            <textarea name="text" rows="10" placeholder="Paste article text here..." required>{{ input_text }}</textarea>
+          </label>
+          <label class="inline">
+            Max sentences
+            <select name="max_sentences">
+              {% for n in [2,3,4,5] %}
+                <option value="{{ n }}" {% if n==3 %}selected{% endif %}>{{ n }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <button class="btn btn-primary" type="submit">Summarize</button>
+        </form>
+      </div>
+
+      {% if summary is not none %}
+        <div class="card">
+          <h3>Summary</h3>
+          <div class="summary">{{ summary }}</div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}
+

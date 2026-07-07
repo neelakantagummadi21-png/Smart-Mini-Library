@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Recommendations - Smart Mini Library{% endblock %}
+
+{% block content %}
+  <section>
+    <div class="page-head">
+      <h2>AI Book Recommendations</h2>
+      <div class="muted">Using query: <span class="mono">{{ query }}</span></div>
+    </div>
+
+    <form class="searchbar" action="{{ url_for('recommendations') }}" method="get">
+      <input name="q" value="{{ query }}" placeholder="Describe what you want to read..." required />
+      <button type="submit">Recommend</button>
+    </form>
+
+    <div class="grid" style="margin-top: 18px;">
+      {% for b in recommendations %}
+        <a class="book" href="{{ url_for('book_details', book_id=b['id']) }}">
+          <div class="book-title">{{ b['title'] }}</div>
+          <div class="book-author">{{ b['author'] }}</div>
+          <div class="book-desc">{{ b['description'] }}</div>
+          <div class="book-tags">{{ b['tags'] }}</div>
+          <div class="book-pop">★ {{ b['popularity'] }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}
+

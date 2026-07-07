@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Login - Smart Mini Library{% endblock %}
+
+{% block content %}
+  <section class="auth-wrap">
+    <div class="card auth-card">
+      <h2>Login</h2>
+      {% if error %}
+        <div class="alert">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" class="form">
+        <label>
+          Username
+          <input name="username" required />
+        </label>
+        <label>
+          Password
+          <input type="password" name="password" required />
+        </label>
+        <button class="btn btn-primary" type="submit">Login</button>
+      </form>
+
+      <div class="muted">
+        Demo login: <span class="mono">demo</span> / <span class="mono">demo123</span>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+

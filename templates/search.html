@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}Search - Smart Mini Library{% endblock %}
+
+{% block content %}
+  <section>
+    <div class="page-head">
+      <h2>Search results</h2>
+      <div class="muted">Query: <span class="mono">{{ query }}</span></div>
+    </div>
+
+    {% if results %}
+      <div class="grid">
+        {% for b in results %}
+          <a class="book" href="{{ url_for('book_details', book_id=b['id']) }}">
+            <div class="book-title">{{ b['title'] }}</div>
+            <div class="book-author">{{ b['author'] }}</div>
+            <div class="book-desc">{{ b['description'] }}</div>
+            <div class="book-tags">{{ b['tags'] }}</div>
+            <div class="book-pop">★ {{ b['popularity'] }}</div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card empty">No matches found.</div>
+    {% endif %}
+
+    <div style="margin-top:28px;" class="card glass">
+      <div class="page-head" style="margin:0 0 12px;">
+        <h2 class="inline" style="gap:10px; margin:0;">
+          <span class="ai-badge" aria-hidden="true">🧠</span>
+          AI Learning Resources
+        </h2>
+        <div class="muted">Topic: <span class="mono">{{ query }}</span> (offline demo)</div>
+      </div>
+
+      <div class="ai-grid">
+        <div class="ai-hero-img" aria-hidden="true">
+          <div class="ai-art ai-art-1">◈</div>
+          <div class="ai-art ai-art-2">⌁</div>
+          <div class="ai-art ai-art-3">⬡</div>
+          <div class="ai-art ai-art-4">✶</div>
+          <div class="ai-caption">Path map</div>
+        </div>
+
+        <div class="ai-content">
+          <div class="ai-section">
+            <h3>1) Topic Overview</h3>
+            <div class="ai-text">{{ ai_resources.sections[1].value | safe }}</div>
+          </div>
+
+          <div class="ai-section">
+            <h3>2) Latest News (offline preview)</h3>
+            <div class="ai-text">{{ ai_resources.sections[2].value }}</div>
+          </div>
+
+          <div class="ai-section">
+            <h3>3) Learning Roadmap</h3>
+            <div class="ai-rows">
+              {% for lvl, items in ai_resources.sections[3].value.items() %}
+                <div class="ai-row">
+                  <div class="ai-row-title">{{ lvl }}</div>
+                  <div class="ai-row-items">
+                    <ul>
+                      {% for it in items %}
+                        <li>{{ it }}</li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="ai-section">
+            <h3>4) Recommended Books</h3>
+            <div class="ai-table">
+              {% for bk in ai_resources.sections[4].value %}
+                <div class="ai-card-mini">
+                  <div class="ai-card-mini-title">{{ bk[0] }}</div>
+                  <div class="ai-card-mini-meta">{{ bk[1] }} • {{ bk[3] }}</div>
+                  <div class="ai-card-mini-desc">{{ bk[4] }}</div>
+                  <div class="ai-card-mini-rating">Rating: {{ bk[2] }}</div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          {# Render remaining sections in a compact list #}
+          <div class="ai-section">
+            <h3>5–20) More Details</h3>
+            <div class="ai-list">
+              {% for i in range(5, 21) %}
+                <div class="ai-list-item">
+                  <div class="ai-list-item-title">{{ i }}) {{ ai_resources.sections[i].title }}</div>
+                  <div class="ai-list-item-body">
+                    {% set v = ai_resources.sections[i].value %}
+                    {% if v is mapping %}
+                      {% for k, vv in v.items() %}
+                        <div class="ai-subtitle">{{ k }}</div>
+                        {% if vv is sequence and (vv is not string) %}
+                          <ul>
+                            {% for x in vv %}<li>{{ x }}</li>{% endfor %}
+                          </ul>
+                        {% else %}
+                          <div>{{ vv }}</div>
+                        {% endif %}
+                      {% endfor %}
+                    {% elif v is sequence and (v is not string) %}
+                      <ul>
+                        {% for x in v %}
+                          <li>
+                            {% if x is mapping %}
+                              {{ x }}
+                            {% elif x is sequence %}
+                              {{ x[0] }}{% if x|length > 4 %} — {{ x[4] }}{% endif %}
+                            {% else %}
+                              {{ x }}
+                            {% endif %}
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      <div class="ai-text">{{ v }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top:12px;">AI content is generated deterministically (offline demo) — not from external APIs.</div>
+    </div>
+   
+   
+ 
+ {% endblock %}
+
+  </section>
+{% endblock %}
+

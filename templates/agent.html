@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}AI Agent - Smart Mini Library{% endblock %}
+
+{% block content %}
+  <section>
+    <div class="page-head">
+      <h2>AI Agent</h2>
+      <div class="muted">Offline deterministic agent + offline SVG image generator (no external APIs).</div>
+    </div>
+
+    <div class="ai-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="card">
+        <form method="post" action="{{ url_for('agent') }}" class="form agent-form">
+          <label>
+            Your message
+            <textarea name="message" rows="4" placeholder="Try: Recommend something about Python\nOr: Summarize: ...\nOr: Give me a learning roadmap for data engineering" required>{{ message or '' }}</textarea>
+          </label>
+
+          <div class="inline" style="justify-content:space-between; gap:12px;">
+            <label class="inline" style="margin:0; align-items:center; gap:8px;">
+              <input type="checkbox" name="gen_image" value="1" {% if gen_image %}checked{% endif %} />
+              Generate image
+            </label>
+            <button class="btn btn-primary" type="submit">Send</button>
+          </div>
+        </form>
+
+        <div class="agent-chat">
+          {% if chat and chat|length > 0 %}
+            {% for item in chat %}
+              <div class="chat-turn">
+                <div class="chat-role">{{ item.role }}</div>
+                <div class="chat-bubble">{{ item.content }}</div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="empty" style="margin-top:18px;">Ask the agent anything about your learning goals.</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:10px;">Generated Output</h3>
+
+        {% if image_data_uri %}
+          <div class="ai-hero-img" style="min-height:auto; padding:10px;">
+            <div class="ai-caption">Generated image (SVG)</div>
+            <img alt="Generated" class="agent-generated-img" src="{{ image_data_uri }}" />
+          </div>
+        {% else %}
+          <div class="muted">No image generated yet.</div>
+        {% endif %}
+
+        <div style="margin-top:16px;" class="ai-section">
+          <h3 style="margin:0 0 8px;">Agent explanation</h3>
+          {% if agent_text %}
+            <div class="ai-text">{{ agent_text }}</div>
+          {% else %}
+            <div class="muted">Send a message to get a response.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
